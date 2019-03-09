@@ -1,0 +1,124 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Search{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+  <form autocomplete="off" action="/search_results">
+    <div class="autocomplete" style="width:300px;">
+      <input id="songname" type="text" name="name" placeholder="Song name">
+    </div>
+    <input type="submit" value="Search">
+  </form>
+
+  <script>
+    function autocomplete(inp, partialSongUrl, songByIdUrl) {
+      var currentFocus;
+      inp.addEventListener("input", function(e) {
+        var inputElement = this;
+        loadData(partialSongUrl + "/" + inputElement.value, function (songs) {
+          songs = JSON.parse(songs);
+          console.log(songs)
+          var b;
+          var i;
+          var val = inputElement.value;
+          closeAllLists();
+          if (!val) {
+            return false;
+          }
+          currentFocus = -1;
+          var container = document.createElement("DIV");
+          container.setAttribute("id", inputElement.id + "autocomplete-list");
+          container.setAttribute("class", "autocomplete-items");
+          inputElement.parentNode.appendChild(container);
+          // This is the part where the stuff is filed
+          var maxLength = songs.length;
+          if (maxLength > 15) {
+            maxLength = 15;
+          }
+          for(i = 0; i < maxLength; i++) {
+            var v = songs[i];
+            console.log(v)
+            b = document.createElement("DIV");
+            b.innerHTML = v["name"];
+            b.innerHTML += "<input type='hidden' value='" + v["id"] + "'>";
+            b.addEventListener("click", function(e) {
+              var whatWasClicked = this.getElementsByTagName("input")[0].value;
+              console.log(whatWasClicked);
+              window.location.href=songByIdUrl + whatWasClicked;
+            });
+            container.appendChild(b);
+          }
+        });
+        console.log("made it to after load data");
+      });
+
+      inp.addEventListener("keydown", function(e) {
+        var container = document.getElementById(this.id + "autocomplete-list")
+        if (container) {
+          container = container.getElementsByTagName("div");
+        }
+        if (e.keyCode ==40) { // DOWN
+          currentFocus++;
+          addActive(container);
+        } else if (e.keyCode == 38) { // UP
+          currentFocus--;
+          addActive(container);
+        } else if (e.keyCode == 13) { // ENTER
+          e.preventDefault();
+          if (currentFocus > -1) {
+            if (container) container[currentFocus].click();
+          }
+        }
+      });
+
+      function addActive(container) {
+        if (!container) return false;
+        removeActive(container);
+        if (currentFocus >= container.length) currentFocus = 0;
+        if (currentFocus < 0) currentFocus = (container.length -1);
+        container[currentFocus].classList.add("autocomplete-active");
+      }
+
+      function removeActive(container) {
+        for (var i = 0; i < container.length; i++) {
+          container[i].classList.remove("autocomplete-active");
+        }
+      }
+
+      function closeAllLists(elmnt) {
+        var items = document.getElementsByClassName("autocomplete-items");
+        for (var i = 0; i < items.length; i++) {
+          if (elmnt != items[i] && elmnt != inp) {
+            items[i].parentNode.removeChild(items[i]);
+          }
+        }
+      }
+      document.addEventListener("click", function (e) {
+        closeAllLists(e.target);
+      });
+    }
+
+    function loadData(url, callback) {
+      console.log("yar load data");
+      var req = new XMLHttpRequest();
+      req.onreadystatechange = function () {
+        console.log("Readystate: " + this.readyState + " status: " + this.status);
+        if (this.readyState == 4 && this.status == 200) {
+                console.log("loaded data");
+            callback(this.responseText);
+        }
+      };
+      req.open("GET", url, true);
+      req.send();
+    }
+
+    autocomplete(document.getElementById("songname"),
+                 "{{ url_for('/search.partial_song') }}",
+                 "{{ url_for('/song.song_by_id') }}");
+
+  </script>
+
+
+{% endblock %}
