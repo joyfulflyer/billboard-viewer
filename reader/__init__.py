@@ -7,12 +7,13 @@ import time
 
 def create_app(test_config=None):
     app = Flask(__name__,
-                instance_path=os.path.abspath(os.path.join(os.path.dirname(__file__), 'instance')),
+                instance_path=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance')),
                 instance_relative_config=True)
-    logging.warning(time.asctime() + " Setting database path to: " + os.path.join(app.instance_path, 'charts.db'))
+    db_path = os.path.join(app.instance_path, '..', 'charts.db')
+    logging.warning(time.asctime() + " Setting database path to: " + db_path)
     app.config.from_mapping(
         SECRET_KEY='dev',
-        DATABASE=os.path.join(app.instance_path, 'charts.db'),
+        DATABASE=db_path,
     )
 
     if test_config is None:

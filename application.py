@@ -1,10 +1,16 @@
 import reader
 import logging
+from pathlib import Path
 
-logging.basicConfig(filename='/opt/python/log/logs.log', filemode='a')
+file_name = 'logs.log'
+path = '/opt/python/logs/'
+
+if not Path(path).exists():
+    path = './'
+
+logging.basicConfig(filename=path+file_name, filemode='w')
 application = reader.create_app()
 
-logging.error("find")
 
 if __name__ == "__main__":
     application.debug = True
