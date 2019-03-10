@@ -2,13 +2,14 @@ import os
 import logging
 from . import flask_db
 from flask import Flask
+import time
 
 
 def create_app(test_config=None):
     app = Flask(__name__,
-                instance_path=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance')),
+                instance_path=os.path.abspath(os.path.join(os.path.dirname(__file__), 'instance')),
                 instance_relative_config=True)
-    logging.warning("Setting database path to: " + os.path.join(app.instance_path, 'charts.db'))
+    logging.warning(time.asctime() + " Setting database path to: " + os.path.join(app.instance_path, 'charts.db'))
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'charts.db'),
