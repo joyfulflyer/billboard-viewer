@@ -37,6 +37,12 @@ def create_app(test_config=None):
     from . import show_song
     app.register_blueprint(show_song.bp)
 
+    from . import home
+    app.register_blueprint(home.bp)
+
+    from . import login
+    app.register_blueprint(login.bp)
+
  #   app.add_url_rule('/', 'hello', 'this is text')
 
     return app

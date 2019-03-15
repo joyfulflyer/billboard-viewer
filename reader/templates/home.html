@@ -1,0 +1,16 @@
+<!doctype html>
+<title>Find some songs</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='home_styles.css') }}">
+<section class="content">
+
+  <div class="box">
+    <form action="{{ url_for('/login.login') }}" method="post" novalidate>
+      {{ form.hidden_tag() }}
+      <p>
+        {{ form.password(size=32) }}
+      </p>
+      <p>
+        {{ form.submit() }}
+      </p>
+  </div>
+</section>

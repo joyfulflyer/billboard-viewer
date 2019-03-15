@@ -6,7 +6,7 @@ from werkzeug.exceptions import abort
 from . flask_db import get_db
 import json
 
-bp = Blueprint('/search', __name__, url_prefix='/')
+bp = Blueprint('/search', __name__, url_prefix='/search')
 
 
 @bp.route('/', methods=("GET",))
@@ -50,6 +50,7 @@ def get_songs_with_name(song_name):
         WHERE UPPER(name) LIKE UPPER(?)
         GROUP BY name, artist
         ORDER BY name
+        LIMIT 25
         ''', (whereClause,)).fetchall()
     return songs
 
@@ -58,10 +59,11 @@ def convert_rows_to_dict(rows):
     return [dict(r) for r in rows]
 
 
+# Does not actually get all songs, turned out to hit the db hard
 @bp.route('/songnames', methods=("GET",))
 def get_all_song_names():
     all_songs = get_db().execute('''
-                                 SELECT * FROM entries GROUP BY name, artist
+                                 SELECT * FROM entries GROUP BY name, artist LIMIT 25
                                  ''').fetchall()
     r = convert_rows_to_dict(all_songs)
     return json.dumps(r)
