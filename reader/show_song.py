@@ -1,9 +1,15 @@
-from flask import ( Blueprint, flash, g, redirect, render_template, request, url_for)
+from flask import ( Blueprint, flash, g, redirect, render_template, request, url_for, session)
 from werkzeug.exceptions import abort
 
 from . flask_db import get_db
 
 bp = Blueprint('/song', __name__, url_prefix='/song')
+
+
+@bp.before_request
+def check_session():
+    if 'authed' not in session:
+        return redirect(url_for('/home.home'))
 
 
 @bp.route('/<int:selected_id>')

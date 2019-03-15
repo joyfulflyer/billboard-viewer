@@ -1,0 +1,27 @@
+.box {
+  margin: auto;
+  width:50%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+form {
+  display: inline-block;
+}
+
+.box input[type=password] {
+  border: 1px solid #BEBEBE;
+  padding: 7px;
+  margin: 0px;
+  outline: none;
+}
+
+.box input[type=password]:focus {
+  box-shadow: 0 0 8px #88D5E9;
+  border: 1px solid #88D5E9;
+}
+
+.box input[type=submit] {
+  border-radius: 8px;
+  background-color: #d6d6d6;
+}

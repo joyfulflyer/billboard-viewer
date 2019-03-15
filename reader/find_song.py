@@ -9,13 +9,24 @@ import json
 bp = Blueprint('/search', __name__, url_prefix='/search')
 
 
+@bp.before_request
+def check_session():
+    if 'authed' not in session:
+        return redirect(url_for('/home.home'))
+
+
 @bp.route('/', methods=("GET",))
 def search():
+    if 'authed' not in session:
+        return redirect(url_for('/home.home'))
     return render_template('search.html')
 
 
 @bp.route('/search_results', methods=("GET",))
 def search_results():
+    if 'authed' not in session:
+        return redirect(url_for('/home.home'))
+
     songs = []
     if 'name' in request.args:
         name = request.args['name']
@@ -30,12 +41,16 @@ def search_results():
     else:
         abort(400, "Bad request")
 
-    return render_template('search_results.html', songs=convert_rows_to_dict(songs))
+    return render_template('search_results.html',
+                           songs=convert_rows_to_dict(songs))
 
 
 @bp.route('/partialSong/<input>', methods=("GET",))
 @bp.route('/partialSong')
 def partial_song(input):
+    if 'authed' not in session:
+        return redirect(url_for('/home.home'))
+
     converted = convertToSpaces(input)
     songs = get_songs_with_name(converted)
     songs = songs[:15]

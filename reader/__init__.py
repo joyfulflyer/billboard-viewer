@@ -12,7 +12,7 @@ def create_app(test_config=None):
     db_path = os.path.join(app.instance_path, '..', 'charts.db')
     logging.warning(time.asctime() + " Setting database path to: " + db_path)
     app.config.from_mapping(
-        SECRET_KEY='dev',
+        SECRET_KEY='u9DCvDN82*$^!xbH#UG',
         DATABASE=db_path,
     )
 
@@ -39,9 +39,6 @@ def create_app(test_config=None):
 
     from . import home
     app.register_blueprint(home.bp)
-
-    from . import login
-    app.register_blueprint(login.bp)
 
  #   app.add_url_rule('/', 'hello', 'this is text')
 
