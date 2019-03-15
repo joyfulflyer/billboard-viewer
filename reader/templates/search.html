@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  <form autocomplete="off" action="/search_results">
+  <form autocomplete="off" action="{{ url_for('/search.search_results') }}">
     <div class="autocomplete" style="width:300px;">
       <input id="songname" type="text" name="name" placeholder="Song name">
     </div>

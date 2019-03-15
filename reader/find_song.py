@@ -17,18 +17,15 @@ def check_session():
 
 @bp.route('/', methods=("GET",))
 def search():
-    if 'authed' not in session:
-        return redirect(url_for('/home.home'))
     return render_template('search.html')
 
 
 @bp.route('/search_results', methods=("GET",))
 def search_results():
-    if 'authed' not in session:
-        return redirect(url_for('/home.home'))
-
+    print("search")
     songs = []
     if 'name' in request.args:
+        print(request.args['name'])
         name = request.args['name']
         name = convertToSpaces(name)
         songs = get_songs_with_name(name)
