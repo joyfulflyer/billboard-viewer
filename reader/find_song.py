@@ -22,10 +22,8 @@ def search():
 
 @bp.route('/search_results', methods=("GET",))
 def search_results():
-    print("search")
     songs = []
     if 'name' in request.args:
-        print(request.args['name'])
         name = request.args['name']
         name = convertToSpaces(name)
         songs = get_songs_with_name(name)
