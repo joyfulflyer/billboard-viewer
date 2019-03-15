@@ -15,9 +15,8 @@ def home():
     if pwd is None:
         pwd = "asdf"
     form = LoginForm()
-    if form.validate_on_submit():
-        if form.password.data == pwd:
-            session['authed'] = True
-            return redirect(url_for('/search.search'))
+    if form.validate_on_submit() and form.password.data == pwd:
+        session['authed'] = True
+        return redirect(url_for('/search.search'))
 
     return render_template('home.html', form=form)
