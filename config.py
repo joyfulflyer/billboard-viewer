@@ -2,10 +2,8 @@ from os import environ
 
 username = "read_billboard" # environ['USERNAME']
 password = "#23Kpq$M4Tnwd%PJMve"
-if 'HOST' in environ:
-    host = environ.get('HOST')
-if 'DATABASE' in environ:
-    db_name = environ.get('DATABASE')
+host = environ.get('HOST')
+db_name = environ.get('DATABASE')
 secret_key='u9DCvDN82*$^!xbH#UG'
 SQLALCHEMY_TRACK_MODIFICATIONS=False
 
