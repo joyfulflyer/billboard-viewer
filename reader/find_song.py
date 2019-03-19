@@ -4,6 +4,7 @@ from flask import(
 )
 from werkzeug.exceptions import abort
 from . flask_db import get_db
+from . models.entry import Entry
 import json
 
 bp = Blueprint('/search', __name__, url_prefix='/search')
@@ -37,7 +38,7 @@ def search_results():
         abort(400, "Bad request")
 
     return render_template('search_results.html',
-                           songs=convert_rows_to_dict(songs))
+                           songs=convert_entry_to_dict(songs))
 
 
 @bp.route('/partialSong/<input>', methods=("GET",))
@@ -50,19 +51,23 @@ def partial_song(input):
     songs = get_songs_with_name(converted)
     songs = songs[:15]
 
-    return json.dumps(convert_rows_to_dict(songs))
+    return json.dumps(convert_entry_to_dict(songs))
 
 
 def get_songs_with_name(song_name):
-    whereClause = '%' + song_name + '%'
-    songs = get_db().execute('''
-        SELECT * FROM entries
-        WHERE UPPER(name) LIKE UPPER(?)
-        GROUP BY name, artist
-        ORDER BY name
-        LIMIT 25
-        ''', (whereClause,)).fetchall()
+    where_clause = "%" + song_name + "%"
+    query = get_db().query(Entry) \
+                    .filter(Entry.name.ilike(where_clause)) \
+                    .group_by(Entry.name, Entry.artist) \
+                    .order_by(Entry.name) \
+                    .limit(25)
+    songs =  query.all()
     return songs
+
+
+def convert_entry_to_dict(entries):
+    r= [{'name':e.name,'id':e.id} for e in entries]
+    return r
 
 
 def convert_rows_to_dict(rows):
@@ -72,10 +77,11 @@ def convert_rows_to_dict(rows):
 # Does not actually get all songs, turned out to hit the db hard
 @bp.route('/songnames', methods=("GET",))
 def get_all_song_names():
-    all_songs = get_db().execute('''
-                                 SELECT * FROM entries GROUP BY name, artist LIMIT 25
-                                 ''').fetchall()
-    r = convert_rows_to_dict(all_songs)
+    all_songs = get_db().query(Entry) \
+                        .group_by(Entry.name, Entry.artist) \
+                        .limit(25) \
+                        .all()
+    r = convert_entry_to_dict(all_songs)
     return json.dumps(r)
 
 
