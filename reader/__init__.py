@@ -1,10 +1,9 @@
 import os
 import logging
-import urllib.parse
 from . import flask_db
 from flask import Flask
 import time
-import config
+#import config
 
 
 logger = logging.getLogger(__name__)
@@ -18,12 +17,6 @@ def create_app(test_config=None):
     db_path = os.path.join(app.instance_path, '..', 'charts.db')
     sql_alchemy_sqlite_url = "sqlite:///{}".format(db_path)
     logger.info(time.asctime() + " SQLite database path: " + db_path)
-
-    # MySQL
-    sql_alchemy_mysql_url = create_url_from_parts(config.username,
-                                                  config.password,
-                                                  config.host,
-                                                  config.db_name)
 
     app.config.from_mapping(
         SECRET_KEY='u9DCvDN82*$^!xbH#UG',
@@ -51,11 +44,3 @@ def create_app(test_config=None):
  #   app.add_url_rule('/', 'hello', 'this is text')
 
     return app
-
-
-def create_url_from_parts(username, password, host, dbname):
-    password = urllib.parse.quote_plus(password)
-    url = "mysql+pymysql://%s:%s@%s/%s" % (username, password, host, dbname)
-    logger.error(url)
-    return url
-
