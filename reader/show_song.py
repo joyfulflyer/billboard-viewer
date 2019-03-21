@@ -26,8 +26,8 @@ def song_by_id(selected_id):
                            Entry.place,
                            Chart.date_string,
                            Chart.type) \
-                    .filter_by(name=entry.name, artist=entry.artist) \
-                    .join(Chart, Chart.id == Entry.id) \
+                    .join(Chart) \
+                    .filter(Entry.name==entry.name, Entry.artist==entry.artist) \
                     .all()
 
 #    execute('''

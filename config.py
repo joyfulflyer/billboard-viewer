@@ -31,13 +31,19 @@ def create_url_from_parts(username, password, host, dbname):
     print("DB url: %r" % (url,))
     return url
 
-username = "read_billboard" # environ['USERNAME']
-password = "#23Kpq$M4Tnwd%PJMve"
-host = environ.get('HOST')
-db_name = environ.get('DATABASE')
-secret_key='u9DCvDN82*$^!xbH#UG'
-SQLALCHEMY_TRACK_MODIFICATIONS=False
-SQLALCHEMY_DATABASE_URI=create_url_from_parts(username,
-                                              password,
-                                              host,
-                                              db_name)
+
+class Config:
+    username = "read_billboard" # environ['USERNAME']
+    password = "#23Kpq$M4Tnwd%PJMve"
+    host = environ.get('HOST')
+    db_name = environ.get('DATABASE')
+    secret_key='u9DCvDN82*$^!xbH#UG'
+    SQLALCHEMY_TRACK_MODIFICATIONS=False
+    SQLALCHEMY_DATABASE_URI=create_url_from_parts(username,
+                                                  password,
+                                                  host,
+                                                  db_name)
+
+
+class TestConfig(Config):
+    ENV="development"
