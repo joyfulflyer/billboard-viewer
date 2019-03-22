@@ -37,7 +37,7 @@ class Config:
     password = "#23Kpq$M4Tnwd%PJMve"
     host = environ.get('HOST')
     db_name = environ.get('DATABASE')
-    secret_key='u9DCvDN82*$^!xbH#UG'
+    SECRET_KEY='u9DCvDN82*$^!xbH#UG'
     SQLALCHEMY_TRACK_MODIFICATIONS=False
     SQLALCHEMY_DATABASE_URI=create_url_from_parts(username,
                                                   password,
