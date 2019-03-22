@@ -2,6 +2,7 @@ import reader
 import logging
 import sys
 from pathlib import Path
+import config
 
 file_name = 'logs.log'
 path = '/opt/python/logs/'
@@ -21,7 +22,7 @@ handler.setLevel(logging.DEBUG)
 
 logging.basicConfig(handlers=handlers)
 
-application = reader.create_app()
+application = reader.create_app(config.TestConfig)
 
 
 if __name__ == "__main__":

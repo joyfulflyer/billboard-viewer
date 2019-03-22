@@ -34,14 +34,13 @@ def song_by_id(selected_id):
                            Entry.place,
                            Chart.date_string,
                            Chart.type) \
-                    .filter(Entry.name == (n)) \
-                    .join(Chart, Chart.id == Entry.id)
+                    .join(Chart) \
+                    .filter(Entry.name==entry.name, Entry.artist==entry.artist)
     print(q)
     songs = q.all()
     logger.info("Songs: %r" % (songs,))
     print('Songs: %r' % (songs,))
 #
-
 #    execute('''
 #                             SELECT
 #                             name, artist, place, date_string, type
