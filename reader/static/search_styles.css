@@ -2,6 +2,14 @@
   box-sizing: border-box;
 }
 
+.box {
+  margin: auto;
+  width:50%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+
 body {
   font: 16px Arial;
 }
@@ -12,19 +20,19 @@ body {
   display: inline-block;
 }
 
-input {
+.box input {
   border: 1px solid transparent;
   background-color: #f1f1f1;
   padding: 10px;
   font-size: 16px;
 }
 
-input[type=text] {
+.box input[type=text] {
   background-color: #f1f1f1;
   width: 100%;
 }
 
-input[type=submit] {
+.box input[type=submit] {
   background-color: DodgerBlue;
   color: #fff;
   cursor: pointer;
