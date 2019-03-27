@@ -29,7 +29,7 @@ def song_by_id(selected_id):
         abort(404, "Not found")
     n = entry.name
     a = entry.artist
-    print("name: %s artist: %s" % (n, a))
+#    print("name: %s artist: %s" % (n, a))
     songs_alias = aliased(Entry)
     chart_topper_alias = aliased(Entry)
     q = get_db().query(songs_alias.name, songs_alias.artist, songs_alias.place, Chart.type, Chart.date_string) \
@@ -37,11 +37,11 @@ def song_by_id(selected_id):
                     .join(Chart, songs_alias.chart_id == Chart.id)
  #                   .join(chart_topper_alias, Chart.id==chart_topper_alias.chart_id) Need the data sub-queried or to group it
 
-    print("Initial query :" + str(q) + "\n\n")
+#    print("Initial query :" + str(q) + "\n\n")
     songs = q.all()
 #    print("Second: " + str(q.subquery(Entry).join(Chart)))
 #    logger.info("Songs: %r" % (songs,))
-    print('Songs: %r' % (songs,))
+#    print('Songs: %r' % (songs,))
 
  #   query(Entry.name, Entry.place).
 
