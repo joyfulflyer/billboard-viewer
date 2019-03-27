@@ -62,7 +62,7 @@ def get_songs_with_name(song_name):
                     .order_by(Entry.name) \
                     .limit(25)
     songs =  query.all()
-    print(songs)
+#    print(songs)
     return songs
 
 
