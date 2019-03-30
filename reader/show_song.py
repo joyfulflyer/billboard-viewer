@@ -1,4 +1,5 @@
-from flask import ( Blueprint, flash, g, redirect, render_template, request, url_for, session)
+from flask import (Blueprint, flash, g, redirect, render_template, request, url_for, session)
+from sqlalchemy.orm import aliased
 from werkzeug.exceptions import abort
 from . models.entry import Entry
 from . models.chart import Chart
@@ -28,18 +29,23 @@ def song_by_id(selected_id):
         abort(404, "Not found")
     n = entry.name
     a = entry.artist
-    print("name: %s artist: %s" % (n, a))
-    q = get_db().query(Entry.name,
-                           Entry.artist,
-                           Entry.place,
-                           Chart.date_string,
-                           Chart.type) \
-                    .join(Chart) \
-                    .filter(Entry.name==entry.name, Entry.artist==entry.artist)
-    print(q)
+#    print("name: %s artist: %s" % (n, a))
+    songs_alias = aliased(Entry)
+    chart_topper_alias = aliased(Entry)
+    q = get_db().query(songs_alias.name, songs_alias.artist, songs_alias.place, Chart.type, Chart.date_string) \
+                    .filter(songs_alias.name==entry.name, songs_alias.artist==entry.artist) \
+                    .join(Chart, songs_alias.chart_id == Chart.id)
+ #                   .join(chart_topper_alias, Chart.id==chart_topper_alias.chart_id) Need the data sub-queried or to group it
+
+#    print("Initial query :" + str(q) + "\n\n")
     songs = q.all()
-    logger.info("Songs: %r" % (songs,))
-    print('Songs: %r' % (songs,))
+#    print("Second: " + str(q.subquery(Entry).join(Chart)))
+#    logger.info("Songs: %r" % (songs,))
+#    print('Songs: %r' % (songs,))
+
+ #   query(Entry.name, Entry.place).
+
+    """ entry.name, entry.artist, entry.place from entries inner join charts on chart id = entries.chart_id """
 #
 #    execute('''
 #                             SELECT

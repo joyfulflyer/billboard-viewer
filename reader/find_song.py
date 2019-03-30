@@ -62,11 +62,12 @@ def get_songs_with_name(song_name):
                     .order_by(Entry.name) \
                     .limit(25)
     songs =  query.all()
+#    print(songs)
     return songs
 
 
 def convert_entry_to_dict(entries):
-    r= [{'name':e.name,'id':e.id} for e in entries]
+    r= [{'name':e.name, 'artist':e.artist, 'id':e.id} for e in entries]
     return r
 
 
