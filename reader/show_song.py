@@ -5,6 +5,7 @@ from . models.entry import Entry
 from . models.chart import Chart
 from . flask_db import get_db
 import logging
+import json
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.NOTSET)
@@ -57,3 +58,10 @@ def song_by_id(selected_id):
 #                             (entry["name"], entry["artist"])).fetchall()
 
     return render_template('song.html', song=entry, songs=songs)
+
+
+@bp.route('/date/<string:date_to_query>')
+def songs_by_date(date_to_query):
+    print(date_to_query)
+    songs = get_db().query(Entry).join(Chart).filter(Chart.date_string == date_to_query).order_by(Entry.place).all()
+    return json.dumps([{'name':e.name, 'artist':e.artist, 'place':e.place, 'id':e.id} for e in songs])
