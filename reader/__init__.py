@@ -41,6 +41,9 @@ def create_app(test_config=None):
     from . import home
     app.register_blueprint(home.bp)
 
+    from . import find_artist
+    app.register_blueprint(find_artist.bp)
+
  #   app.add_url_rule('/', 'hello', 'this is text')
 
     return app

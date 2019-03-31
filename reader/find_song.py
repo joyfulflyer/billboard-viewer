@@ -29,10 +29,6 @@ def search_results():
         name = convertToSpaces(name)
         songs = get_songs_with_name(name)
 
-    elif 'artist' in request.args:
-        artist = request.args['artist']
-        artist = convertToSpaces(artist)
-        songs = []
 
     else:
         abort(400, "Bad request")
