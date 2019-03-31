@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% for cur in songs %}
+    <div>
+      <a href="{{ url_for('/song.song_by_id', selected_id=cur['id']) }}">{{ cur['name'] }}</a>
+    </div>
+  {% endfor %}
+
+{% endblock %}

@@ -32,7 +32,7 @@ def partial_artist():
     else:
         abort(400, "Bad request")
 
-    return render_template('partial_artist.html', artists)
+    return render_template('partial_artist.html', artists=[e[0] for e in artists])
 
 
 def get_artists_with_name(artist_name):
@@ -55,6 +55,6 @@ def songs_from_artist(input):
         abort(400, "Not found")
 
 
-    return json.dumps([{'name':e.name, 'place':e.place, 'id':e.id} for e in artist])
+    return render_template('artist_songs.html', songs=[{'name':e.name, 'place':e.place, 'id':e.id} for e in artist])
 
 

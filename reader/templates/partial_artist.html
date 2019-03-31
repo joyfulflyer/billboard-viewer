@@ -1,0 +1,10 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% for cur in artists %}
+    <div>
+      <a href="{{ url_for('/artist.songs_from_artist', input=cur) }}">{{ cur }}</a>
+    </div>
+  {% endfor %}
+
+{% endblock %}
