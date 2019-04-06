@@ -1,13 +1,17 @@
 from . base import Base
-from sqlalchemy import Integer, Column, String
+from sqlalchemy import Integer, Column, String, ForeignKey
 
 
 class Song(Base):
     __tablename__ = 'songs'
 
     id = Column(Integer, primary_key=True)
-    name = Column(String)
-    artist = Column(String)
+    name = Column(String(256), nullable=False)
+    artist = Column(String(128), nullable=False)
+    spotify_id = Column(Integer, nullable=True)
+    search_term = Column(String(256), nullable=True)
+    search_results = Column(Integer, nullable=True)
 
     def __repr__(self):
-        return "Song: <id='%r', name='%r', artist='%r'>" % (self.id, self.name, self.artist)
+        return "Song: <id=%r, name=%r, spotify_id=%r>" % \
+            (self.id, self.name, self.spotify_id)
