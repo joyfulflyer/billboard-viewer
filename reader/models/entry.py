@@ -1,4 +1,5 @@
 from . base import Base
+from . song import Song
 from sqlalchemy import Integer, Column, String, ForeignKey
 
 
@@ -13,7 +14,7 @@ class Entry(Base):
     last_position = Column(Integer, nullable=True)
     weeks_on_chart = Column(Integer, nullable=True)
     chart_id = Column(Integer, ForeignKey("charts.id"), nullable=False)
-    song_id = Column(Integer, ForeignKey("songs.id"), nullable=True)
+    song_id = Column(Integer, ForeignKey("%s.id" % (Song.__tablename__)))
 
     def __repr__(self):
         return "Entry: <id='%r', name='%r', artist='%r'>" % \
