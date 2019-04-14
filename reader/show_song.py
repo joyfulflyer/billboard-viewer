@@ -3,6 +3,7 @@ from sqlalchemy.orm import aliased
 from werkzeug.exceptions import abort
 from . models.entry import Entry
 from . models.chart import Chart
+from . models.song import Song
 from . flask_db import get_db
 import logging
 import json
@@ -19,10 +20,15 @@ def check_session():
         return redirect(url_for('/home.home'))
 
 
+@bp.route('/entry/<int:selected_id>')
+def song_by_linked_entry(selected_id):
+    return
+
+
 @bp.route('/<int:selected_id>')
 @bp.route('/')
 def song_by_id(selected_id):
-    entry = get_db().query(Entry) \
+    entry = get_db().query(Song) \
                     .filter_by(id=selected_id) \
                     .one()
     logger.error("Entry: " + repr(entry))

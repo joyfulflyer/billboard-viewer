@@ -35,7 +35,7 @@ def create_url_from_parts(username, password, host, dbname):
 class Config:
     username = "read_billboard" # environ['USERNAME']
     password = "#23Kpq$M4Tnwd%PJMve"
-    host = environ.get('HOST')
+    host = environ.get('DB_HOST')
     db_name = environ.get('DATABASE')
     SECRET_KEY='u9DCvDN82*$^!xbH#UG'
     SQLALCHEMY_TRACK_MODIFICATIONS=False

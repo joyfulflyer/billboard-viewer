@@ -7,6 +7,6 @@
 
 {% block content %}
   {% for cur in songs %}
-    <div>{{ cur[0] }} by {{ cur[1] }} was at {{ cur[2] }} on <a href="http://www.billboard.com/charts/{{ cur[3] }}/{{ cur[4] }}">{{ cur[4] }}</a></div>
+    <div>{{ cur[0] }} by {{ cur[1] }} was at {{ cur[2] }} on the {{ cur[3] }} on <a href="http://www.billboard.com/charts/{{ cur[3] }}/{{ cur[4] }}">{{ cur[4] }}</a></div>
   {% endfor %}
 {% endblock %}
