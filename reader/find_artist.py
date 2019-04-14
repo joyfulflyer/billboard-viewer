@@ -5,6 +5,7 @@ from flask import(
 from werkzeug.exceptions import abort
 from . flask_db import get_db
 from . models.entry import Entry
+from . models.song import Song
 import json
 from . find_song import bp, convertToSpaces
 
@@ -37,19 +38,19 @@ def partial_artist():
 
 def get_artists_with_name(artist_name):
     where_clause = "%" + artist_name + "%"
-    query = get_db().query(Entry.artist) \
-                    .filter(Entry.artist.ilike(where_clause)) \
-                    .group_by(Entry.artist) \
+    query = get_db().query(Song.artist) \
+                    .filter(Song.artist.ilike(where_clause)) \
+                    .group_by(Song.artist) \
                     .limit(25)
     return query.all()
 
 
 @bp.route('/name/<input>')
 def songs_from_artist(input):
-    artist = get_db().query(Entry) \
-                     .filter(Entry.artist == input) \
-                     .order_by(Entry.place) \
-                     .group_by(Entry.name) \
+    artist = get_db().query(Song) \
+                     .filter(Song.artist == input) \
+                     .order_by(Song.place) \
+                     .group_by(Song.name) \
                      .all()
     if len(artist) is 0:
         abort(400, "Not found")

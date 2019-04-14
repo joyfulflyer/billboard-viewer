@@ -5,6 +5,7 @@ from flask import(
 from werkzeug.exceptions import abort
 from . flask_db import get_db
 from . models.entry import Entry
+from . models.song import Song
 import json
 
 bp = Blueprint('/search', __name__, url_prefix='/search')
@@ -52,10 +53,10 @@ def partial_song(input):
 
 def get_songs_with_name(song_name):
     where_clause = "%" + song_name + "%"
-    query = get_db().query(Entry) \
-                    .filter(Entry.name.ilike(where_clause)) \
-                    .group_by(Entry.name, Entry.artist) \
-                    .order_by(Entry.name) \
+    query = get_db().query(Song) \
+                    .filter(Song.name.ilike(where_clause)) \
+                    .group_by(Song.name, Song.artist) \
+                    .order_by(Song.name) \
                     .limit(25)
     songs =  query.all()
 #    print(songs)
@@ -74,8 +75,8 @@ def convert_rows_to_dict(rows):
 # Does not actually get all songs, turned out to hit the db hard
 @bp.route('/songnames', methods=("GET",))
 def get_all_song_names():
-    all_songs = get_db().query(Entry) \
-                        .group_by(Entry.name, Entry.artist) \
+    all_songs = get_db().query(Song) \
+                        .group_by(Song.name, Song.artist) \
                         .limit(25) \
                         .all()
     r = convert_entry_to_dict(all_songs)
