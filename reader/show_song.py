@@ -1,4 +1,5 @@
-from flask import (Blueprint, flash, g, redirect, render_template, request, url_for, session)
+from flask import (Blueprint, flash, g, redirect,
+                   render_template, request, url_for, session)
 from sqlalchemy.orm import aliased
 from werkzeug.exceptions import abort
 from . models.entry import Entry
@@ -40,8 +41,8 @@ def song_by_id(selected_id):
     songs_alias = aliased(Entry)
     chart_topper_alias = aliased(Entry)
     q = get_db().query(songs_alias.name, songs_alias.artist, songs_alias.place, Chart.type, Chart.date_string) \
-                    .filter(songs_alias.name==entry.name, songs_alias.artist==entry.artist) \
-                    .join(Chart, songs_alias.chart_id == Chart.id)
+        .filter(songs_alias.name == entry.name, songs_alias.artist == entry.artist) \
+        .join(Chart, songs_alias.chart_id == Chart.id)
  #                   .join(chart_topper_alias, Chart.id==chart_topper_alias.chart_id) Need the data sub-queried or to group it
 
 #    print("Initial query :" + str(q) + "\n\n")
@@ -69,5 +70,6 @@ def song_by_id(selected_id):
 @bp.route('/date/<string:date_to_query>')
 def songs_by_date(date_to_query):
     print(date_to_query)
-    songs = get_db().query(Entry).join(Chart).filter(Chart.date_string == date_to_query).order_by(Entry.place).all()
-    return json.dumps([{'name':e.name, 'artist':e.artist, 'place':e.place, 'id':e.id} for e in songs])
+    songs = get_db().query(Entry).join(Chart).filter(
+        Chart.date_string == date_to_query).order_by(Entry.place).all()
+    return json.dumps([{'name': e.name, 'artist': e.artist, 'place': e.place, 'id': e.id} for e in songs])

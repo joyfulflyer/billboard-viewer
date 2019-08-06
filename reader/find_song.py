@@ -30,7 +30,6 @@ def search_results():
         name = convertToSpaces(name)
         songs = get_songs_with_name(name)
 
-
     else:
         abort(400, "Bad request")
 
@@ -58,13 +57,13 @@ def get_songs_with_name(song_name):
                     .group_by(Song.name, Song.artist) \
                     .order_by(Song.name) \
                     .limit(25)
-    songs =  query.all()
+    songs = query.all()
 #    print(songs)
     return songs
 
 
 def convert_entry_to_dict(entries):
-    r= [{'name':e.name, 'artist':e.artist, 'id':e.id} for e in entries]
+    r = [{'name': e.name, 'artist': e.artist, 'id': e.id} for e in entries]
     return r
 
 
