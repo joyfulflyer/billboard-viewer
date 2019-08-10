@@ -6,7 +6,7 @@ class Chart(Base):
     __tablename__ = 'charts'
 
     id = Column(Integer, primary_key=True)
-    type = Column(String(128))
+    chart_type = Column('type', String(128))
     date_string = Column(String(128))
     next_chart_date = Column(String(128))
 
@@ -15,4 +15,4 @@ class Chart(Base):
 
     def __repr__(self):
         return "Chart: <id=%r, type=%r, date=%r>" % (
-            self.id, self.type, self.date_string)
+            self.id, self.chart_type, self.date_string)

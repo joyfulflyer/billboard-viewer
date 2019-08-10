@@ -7,7 +7,7 @@ from . flask_db import get_db
 from . models.entry import Entry
 from . models.song import Song
 import json
-from . find_song import bp, convertToSpaces
+from . find_song import bp
 
 
 bp = Blueprint('/artist', __name__, url_prefix='/artist')

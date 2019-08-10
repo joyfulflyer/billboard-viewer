@@ -6,6 +6,9 @@ from werkzeug.exceptions import abort
 from . flask_db import get_db
 from . models.entry import Entry
 from . models.song import Song
+from . reader_utils import (
+    convert_entry_to_dict, convert_to_spaces, convert_rows_to_dict
+)
 import json
 
 bp = Blueprint('/search', __name__, url_prefix='/search')
@@ -27,7 +30,7 @@ def search_results():
     songs = []
     if 'name' in request.args:
         name = request.args['name']
-        name = convertToSpaces(name)
+        name = convert_to_spaces(name)
         songs = get_songs_with_name(name)
 
     else:
@@ -43,7 +46,7 @@ def partial_song(input):
     if 'authed' not in session:
         return redirect(url_for('/home.home'))
 
-    converted = convertToSpaces(input)
+    converted = convert_to_spaces(input)
     songs = get_songs_with_name(converted)
     songs = songs[:15]
 
@@ -62,15 +65,6 @@ def get_songs_with_name(song_name):
     return songs
 
 
-def convert_entry_to_dict(entries):
-    r = [{'name': e.name, 'artist': e.artist, 'id': e.id} for e in entries]
-    return r
-
-
-def convert_rows_to_dict(rows):
-    return [dict(r) for r in rows]
-
-
 # Does not actually get all songs, turned out to hit the db hard
 @bp.route('/songnames', methods=("GET",))
 def get_all_song_names():
@@ -80,7 +74,3 @@ def get_all_song_names():
                         .all()
     r = convert_entry_to_dict(all_songs)
     return json.dumps(r)
-
-
-def convertToSpaces(input):
-    return " ".join(input.split('_'))
