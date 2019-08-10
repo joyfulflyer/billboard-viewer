@@ -44,8 +44,8 @@ def create_app(test_config=None):
 #    from . import find_artist
 #    app.register_blueprint(find_artist.bp)
 
-#    from . import json_api
-#    app.register_blueprint(json_api.bp)
+    from . import json_api
+    app.register_blueprint(json_api.bp)
 
  #   app.add_url_rule('/', 'hello', 'this is text')
 

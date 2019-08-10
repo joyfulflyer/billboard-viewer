@@ -79,3 +79,19 @@ def convert_entry_to_chart(entry):
     returnChart["chartName"] = chart.chart_type
     returnChart["date"] = chart.date_string
     return returnChart
+
+
+@bp.route('/chart/<int:selected_id>')
+@bp.route('/chart', methods=("POST",))
+def get_songs_for_chart(selected_id):
+    if selected_id is None and request.is_json:
+        selected_id = request.json.id
+    chart_entries = get_db().query(Entry) \
+        .filter_by(chart_id=selected_id) \
+        .all()
+    converted = list(map(lambda entry:
+                    {"name": entry.name,
+                     "artist": entry.artist,
+                     "place": entry.place,
+                     "songId": entry.song_id}, chart_entries))
+    return json.dumps(converted)

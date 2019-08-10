@@ -4,6 +4,7 @@ from flask import(
 )
 from werkzeug.exceptions import abort
 from . flask_db import get_db
+from . reader_utils import convert_to_spaces
 from . models.entry import Entry
 from . models.song import Song
 import json
@@ -28,7 +29,7 @@ def search():
 def partial_artist():
     if 'artist' in request.args:
         artist = request.args['artist']
-        artist = convertToSpaces(artist)
+        artist = convert_to_spaces(artist)
         artists = get_artists_with_name(artist)
     else:
         abort(400, "Bad request")
