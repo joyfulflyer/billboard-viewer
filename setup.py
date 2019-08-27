@@ -7,7 +7,7 @@ setup(
     description="View the charts retrieved by the grabber",
     author="Joyfulflyer",
     packages=find_packages(),
-    python_requires='<=3.6, <4',
+    python_requires='>=3.6, <4',
     install_requires=[
         'Flask',
         'Flask-SQLAlchemy',
