@@ -1,4 +1,4 @@
-from . base import Base
+from .base import Base
 from sqlalchemy import Integer, Column, String
 
 
@@ -14,5 +14,5 @@ class Chart(Base):
         return self.date_string.split('-')[0]
 
     def __repr__(self):
-        return "Chart: <id=%r, type=%r, date=%r>" % (
-            self.id, self.chart_type, self.date_string)
+        return "Chart: <id=%r, type=%r, date=%r>" % (self.id, self.chart_type,
+                                                     self.date_string)

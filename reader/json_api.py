@@ -1,16 +1,13 @@
 import json
-from flask import(
-    Blueprint, request
-)
-from . find_song import get_songs_with_name
-from . reader_utils import (
-    convert_entry_to_dict, convert_to_spaces, convert_rows_to_dict
-)
-from . models.entry import Entry
-from . models.chart import Chart
-from . models.song import Song
+from flask import (Blueprint, request)
+from .find_song import get_songs_with_name
+from .reader_utils import (convert_entry_to_dict, convert_to_spaces,
+                           convert_rows_to_dict)
+from .models.entry import Entry
+from .models.chart import Chart
+from .models.song import Song
 from werkzeug.exceptions import abort
-from . flask_db import get_db
+from .flask_db import get_db
 import logging
 
 logger = logging.getLogger(__name__)
@@ -19,7 +16,7 @@ logger.setLevel(logging.NOTSET)
 bp = Blueprint('/api', __name__, url_prefix='/api')
 
 
-@bp.route('/songName', methods=("POST",))
+@bp.route('/songName', methods=("POST", ))
 def song_from_name():
     input = request.json
     converted = convert_to_spaces(input)
@@ -30,7 +27,7 @@ def song_from_name():
 
 
 @bp.route('/song/<int:selected_id>')
-@bp.route('/song', methods=("POST",))
+@bp.route('/song', methods=("POST", ))
 def song_by_id(selected_id):
     '''
 General contract:
@@ -58,6 +55,7 @@ General contract:
     entries = get_db().query(Entry) \
         .filter_by(song_id=song.id).all()
     charts = list(map(convert_entry_to_chart, entries))
+    charts.sort(key=lambda chart: chart["chartName"])
     songDict = {
         "name": song.name,
         "artist": song.artist,
@@ -68,10 +66,7 @@ General contract:
 
 
 def convert_entry_to_chart(entry):
-    returnChart = {
-        "place": entry.place,
-        "chartId": entry.chart_id
-    }
+    returnChart = {"place": entry.place, "chartId": entry.chart_id}
     chart = get_db().query(Chart) \
         .filter_by(id=entry.chart_id).one()
     if chart is None:
@@ -82,16 +77,19 @@ def convert_entry_to_chart(entry):
 
 
 @bp.route('/chart/<int:selected_id>')
-@bp.route('/chart', methods=("POST",))
+@bp.route('/chart', methods=("POST", ))
 def get_songs_for_chart(selected_id):
     if selected_id is None and request.is_json:
         selected_id = request.json.id
     chart_entries = get_db().query(Entry) \
         .filter_by(chart_id=selected_id) \
         .all()
-    converted = list(map(lambda entry:
-                    {"name": entry.name,
-                     "artist": entry.artist,
-                     "place": entry.place,
-                     "songId": entry.song_id}, chart_entries))
+    converted = list(
+        map(
+            lambda entry: {
+                "name": entry.name,
+                "artist": entry.artist,
+                "place": entry.place,
+                "songId": entry.song_id
+            }, chart_entries))
     return json.dumps(converted)
