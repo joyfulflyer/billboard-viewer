@@ -110,3 +110,4 @@ winenv/
 !.elasticbeanstalk/*.global.yml
 
 .vscode/
+env_file
