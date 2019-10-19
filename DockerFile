@@ -1,0 +1,15 @@
+FROM python:3.7-buster
+
+COPY ./Pipfile /app/Pipfile
+COPY ./Pipfile.lock /app/Pipfile.lock
+
+WORKDIR /app
+
+RUN pip3 install pipenv
+RUN pipenv install
+
+COPY . /app
+
+EXPOSE 5000
+
+CMD [ "pipenv", "run", "python", "application.py" ]

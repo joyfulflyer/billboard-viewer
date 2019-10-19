@@ -1,4 +1,4 @@
-from . base import Base
+from .base import Base
 from sqlalchemy import Integer, Column, String, ForeignKey
 
 
@@ -8,9 +8,6 @@ class Song(Base):
     id = Column(Integer, primary_key=True)
     name = Column(String(256), nullable=False)
     artist = Column(String(128), nullable=False)
-    spotify_id = Column(Integer, nullable=True)
-    search_term = Column(String(256), nullable=True)
-    search_results = Column(Integer, nullable=True)
 
     def __repr__(self):
         return "Song: <id=%r, name=%r, spotify_id=%r>" % \

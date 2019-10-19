@@ -4,11 +4,15 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
+yapf = "*"
+python-dotenv = "*"
 
 [packages]
 flask-sqlalchemy = "*"
 flask = "*"
 pymysql = "*"
+cryptography = "*"
 
 [requires]
 python_version = "3.7"
