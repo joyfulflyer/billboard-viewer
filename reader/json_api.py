@@ -18,9 +18,8 @@ bp = Blueprint('/api', __name__, url_prefix='/api')
 
 @bp.route('/songName', methods=("POST", ))
 def song_from_name():
-    input = request.json
-    converted = convert_to_spaces(input)
-    songs = get_songs_with_name(converted)
+    input = request.json['input']
+    songs = get_songs_with_name(input)
     songs = songs[:15]
 
     return json.dumps(convert_entry_to_dict(songs))
