@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 from os import path
 
 setup(name="billboard-viewer",
-      version="0.2.0",
+      version="0.2.1",
       description="View the charts retrieved by the grabber",
       author="Joyfulflyer",
       packages=find_packages(),
