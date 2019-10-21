@@ -1,6 +1,4 @@
-FROM python:3.7-buster
-
-RUN pip3 install --upgrade pip
+FROM python:3.7-slim-buster
 
 COPY ./Pipfile /app/Pipfile
 COPY ./Pipfile.lock /app/Pipfile.lock
