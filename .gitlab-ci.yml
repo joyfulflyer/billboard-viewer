@@ -4,10 +4,6 @@ stages:
   - build
   - push
 
-variables:
-  - CI_JOB_TOKEN
-  - CI_REGISTRY
-
 before_script:
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
