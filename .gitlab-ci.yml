@@ -17,7 +17,7 @@ before_script:
 build_image:
   stage: build
   script:
-    - docker build --pull --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
+    - docker build --pull -f "DockerFile" --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 push_latest:
