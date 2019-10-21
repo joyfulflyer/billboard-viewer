@@ -4,11 +4,13 @@ stages:
   - build
   - push
 
+variables:
+  pipeline_id:
+    - $CI_JOB_TOKEN
+    - $CI_REGISTRY
+
 before_script:
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-
-variables:
-  pipeline_id: $CI_PIPELINE_IID
 
 build_image:
   stage: build
