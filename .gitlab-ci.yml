@@ -11,7 +11,6 @@ stages:
   - push
 
 before_script:
-  - docker info
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
 build_image:
