@@ -6,12 +6,12 @@ COPY ./Pipfile.lock /app/Pipfile.lock
 WORKDIR /app
 
 RUN pip3 install pipenv
-RUN pipenv lock --requirements > requirements.txt
-RUN pip3 install -r requirements.txt
-RUN pip3 install gunicorn
+RUN pipenv install gunicorn
+RUN pipenv install
 
 COPY . /app
 
 EXPOSE 8000
 
+ENTRYPOINT [ "pipenv", "run" ]
 CMD [ "gunicorn", "-w", "4", "application" ]
