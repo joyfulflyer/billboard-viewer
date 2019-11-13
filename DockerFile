@@ -1,11 +1,11 @@
-FROM python:3.8-buster
+FROM python:3.8-slim-buster
 
 COPY ./Pipfile /app/Pipfile
 COPY ./Pipfile.lock /app/Pipfile.lock
 
 WORKDIR /app
 
-RUN pip3 install pipenv
+RUN apt-get install pipenv
 RUN pipenv install gunicorn
 RUN pipenv install
 
