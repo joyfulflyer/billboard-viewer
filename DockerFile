@@ -6,7 +6,7 @@ COPY ./Pipfile.lock /app/Pipfile.lock
 WORKDIR /app
 
 RUN pip3 install pipenv
-RUN pipenv install gunicorn
+RUN pipenv install gunicorn --skip-lock
 RUN pipenv install --ignore-pipfile
 
 COPY . /app
