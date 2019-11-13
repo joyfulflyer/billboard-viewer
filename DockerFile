@@ -5,7 +5,8 @@ COPY ./Pipfile.lock /app/Pipfile.lock
 
 WORKDIR /app
 
-RUN apt-get install pipenv
+RUN pip3 install pipenv
+RUN pipenv --python 3.8
 RUN pipenv install gunicorn
 RUN pipenv install
 
