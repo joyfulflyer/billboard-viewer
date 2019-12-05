@@ -53,6 +53,7 @@ General contract:
         abort(404, "Song not found")
     entries = get_db().query(Entry) \
         .filter_by(song_id=song.id).all()
+    # Note: not sorted correctly here
     charts = list(map(convert_entry_to_chart, entries))
     charts.sort(key=lambda chart: chart["chartName"])
     songDict = {
@@ -62,6 +63,10 @@ General contract:
         "charts": charts
     }
     return json.dumps(songDict)
+
+
+def song_by_id_with_sub_chart_entries(selected_id):
+    pass
 
 
 def convert_entry_to_chart(entry):
