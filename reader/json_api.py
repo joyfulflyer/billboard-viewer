@@ -79,7 +79,6 @@ def song_by_id_with_sub_chart_entries(selected_id):
                 chartName,
                 chartId,
                 entries: [
-                    id,
                     name,
                     artist,
                     place,
@@ -115,7 +114,6 @@ def add_entries_to_chart(chart):
         .all()
     chart_entries_mapped = map(
         lambda entry: {
-            "id": entry.id,
             "name": entry.name,
             "artist": entry.artist,
             "place": entry.place,
