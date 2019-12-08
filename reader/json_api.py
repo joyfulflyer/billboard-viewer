@@ -53,7 +53,6 @@ General contract:
         abort(404, "Song not found")
     entries = get_db().query(Entry) \
         .filter_by(song_id=song.id).all()
-    # Note: not sorted correctly here
     charts = list(map(convert_entry_to_chart, entries))
     charts.sort(key=lambda chart: (chart["chartName"], chart["date"]))
     songDict = {
@@ -65,8 +64,65 @@ General contract:
     return jsonify(songDict)
 
 
+@bp.route('/song/<int:selected_id>/more')
 def song_by_id_with_sub_chart_entries(selected_id):
-    pass
+    '''
+    General contract:
+    {
+        id: int,
+        name: string,
+        artist: string,
+        charts: [
+            {
+                place,
+                date,
+                chartName,
+                chartId,
+                entries: [
+                    id,
+                    name,
+                    artist,
+                    place,
+                    songId
+                ]
+            }
+        ]
+    }
+    '''
+
+    song = get_db().query(Song) \
+        .filter_by(id=selected_id) \
+        .one()
+    if song is None:
+        abort(404, "Song not found")
+    entries = get_db().query(Entry) \
+        .filter_by(song_id=song.id).all()
+    charts = list(map(convert_entry_to_chart, entries))
+    charts.sort(key=lambda chart: (chart["chartName"], chart["date"]))
+    chartsWithEntries = list(map(add_entries_to_chart, charts))
+    songDict = {
+        "name": song.name,
+        "artist": song.artist,
+        "id": song.id,
+        "charts": chartsWithEntries
+    }
+    return jsonify(songDict)
+
+
+def add_entries_to_chart(chart):
+    chart_entries = get_db().query(Entry) \
+        .filter_by(chart_id=chart['chartId']) \
+        .all()
+    chart_entries_mapped = map(
+        lambda entry: {
+            "id": entry.id,
+            "name": entry.name,
+            "artist": entry.artist,
+            "place": entry.place,
+            "songId": entry.song_id
+        }, chart_entries)
+    chart['entries'] = list(chart_entries_mapped)
+    return chart
 
 
 def convert_entry_to_chart(entry):
@@ -96,4 +152,4 @@ def get_songs_for_chart(selected_id):
                 "place": entry.place,
                 "songId": entry.song_id
             }, chart_entries))
-    return json.dumps(converted)
+    return jsonify(converted)
