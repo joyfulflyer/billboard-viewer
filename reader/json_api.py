@@ -1,5 +1,5 @@
 import json
-from flask import (Blueprint, request)
+from flask import (Blueprint, request, jsonify)
 from .find_song import get_songs_with_name
 from .reader_utils import (convert_entry_to_dict, convert_to_spaces,
                            convert_rows_to_dict)
@@ -62,7 +62,7 @@ General contract:
         "id": song.id,
         "charts": charts
     }
-    return json.dumps(songDict)
+    return jsonify(songDict)
 
 
 def song_by_id_with_sub_chart_entries(selected_id):
