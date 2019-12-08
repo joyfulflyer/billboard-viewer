@@ -55,7 +55,7 @@ General contract:
         .filter_by(song_id=song.id).all()
     # Note: not sorted correctly here
     charts = list(map(convert_entry_to_chart, entries))
-    charts.sort(key=lambda chart: chart["chartName"])
+    charts.sort(key=lambda chart: (chart["chartName"], chart["date"]))
     songDict = {
         "name": song.name,
         "artist": song.artist,
