@@ -27,7 +27,7 @@ run_tests:
     - pip install pipenv
     - pipenv sync --dev
   script:
-    - python -m unittest discover -p "*_test.py" -v
+    - pipenv run python -m unittest discover -p "*_test.py" -v
 
 push_latest:
   variables:
