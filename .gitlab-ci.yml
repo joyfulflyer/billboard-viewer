@@ -7,8 +7,8 @@ services:
   - docker:19.03.4-dind
 
 stages:
-  - build
   - test
+  - build
   - push
 
 before_script:
@@ -21,10 +21,12 @@ build_image:
     - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
 
 run_tests:
+  image: "python:3.8"
   stage: test
   script:
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker run $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA python -m unittest discover -p "*_test.py" -v
+    - pip install pipenv
+    - pipenv sync --dev
+    - python -m unittest discover -p "*_test.py" -v
 
 push_latest:
   variables:
