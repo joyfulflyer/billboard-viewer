@@ -23,9 +23,10 @@ build_image:
 run_tests:
   image: "python:3.8"
   stage: test
-  script:
+  before_script:
     - pip install pipenv
     - pipenv sync --dev
+  script:
     - python -m unittest discover -p "*_test.py" -v
 
 push_latest:
