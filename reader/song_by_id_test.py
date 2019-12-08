@@ -44,6 +44,33 @@ class TestSongById(TestCase):
         assert charts is not None
         assert len(charts) > 0
 
+    def test_get_song_returns_entries_sorted_by_chart_date(self):
+        entry1 = Entry(id=1,
+                       name="one",
+                       place=1,
+                       artist="a",
+                       song_id=1,
+                       chart_id=1)
+        chart1 = Chart(id=1, date_string="2000-01-01", chart_type="foo")
+        entry2 = Entry(id=2,
+                       name="two",
+                       place=1,
+                       artist="a",
+                       song_id=1,
+                       chart_id=2)
+        chart2 = Chart(id=2, chart_type="foo", date_string="1950-01-01")
+        db = get_db()
+        db.add(entry1)
+        db.add(chart1)
+        db.add(entry2)
+        db.add(chart2)
+        db.commit()
+
+        response = self.client.get('/api/song/1')
+        charts = response.json['charts']
+        assert charts[0]['chartId'] == 2
+        assert charts[1]['chartId'] == 1
+
     def setUp(self):
         Base.metadata.create_all(get_db().get_bind().engine)
         get_db().add((Song(id=1, name="songName", artist="song artist")))
