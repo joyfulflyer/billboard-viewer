@@ -3,15 +3,14 @@ import logging
 from . import flask_db
 from flask import Flask
 import time
-import config
-
 
 logger = logging.getLogger(__name__)
 
 
 def create_app(test_config=None):
     app = Flask(__name__,
-                instance_path=os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance')),
+                instance_path=os.path.abspath(
+                    os.path.join(os.path.dirname(__file__), '..', 'instance')),
                 instance_relative_config=True)
     # SQLite
     db_path = os.path.join(app.instance_path, '..', 'charts.db')
@@ -32,21 +31,21 @@ def create_app(test_config=None):
 
     flask_db.init_app(app)
 
-#    from . import find_song
-#    app.register_blueprint(find_song.bp)
+    #    from . import find_song
+    #    app.register_blueprint(find_song.bp)
 
-#    from . import show_song
-#    app.register_blueprint(show_song.bp)
+    #    from . import show_song
+    #    app.register_blueprint(show_song.bp)
 
-#    from . import home
-#    app.register_blueprint(home.bp)
+    #    from . import home
+    #    app.register_blueprint(home.bp)
 
-#    from . import find_artist
-#    app.register_blueprint(find_artist.bp)
+    #    from . import find_artist
+    #    app.register_blueprint(find_artist.bp)
 
     from . import json_api
     app.register_blueprint(json_api.bp)
 
- #   app.add_url_rule('/', 'hello', 'this is text')
+    #   app.add_url_rule('/', 'hello', 'this is text')
 
     return app
