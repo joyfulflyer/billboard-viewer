@@ -12,7 +12,7 @@ from .models.chart import Chart
 from . import json_api
 
 
-class TestSongById(TestCase):
+class SongByIdTest(TestCase):
     SQLALCHEMY_DATABASE_URI = "sqlite:///:memory:"
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     TESTING = True
@@ -23,11 +23,11 @@ class TestSongById(TestCase):
 
     def test_get_song_returns_something(self):
         response = self.client.get('/api/song/1')
-        assert response is not None
+        self.assertTrue(response is not None)
 
     def test_get_song_status_is_200(self):
         response = self.client.get('/api/song/1')
-        assert response.status_code == 200
+        self.assert200(response)
 
     def test_get_song_returns_entries(self):
         get_db().add(
@@ -41,8 +41,8 @@ class TestSongById(TestCase):
         get_db().commit()
         response = self.client.get('/api/song/1')
         charts = response.json['charts']
-        assert charts is not None
-        assert len(charts) > 0
+        self.assertTrue(charts is not None)
+        self.assertTrue(len(charts) > 0)
 
     def test_get_song_returns_entries_sorted_by_chart_date(self):
         entry1 = Entry(id=1,
@@ -68,8 +68,8 @@ class TestSongById(TestCase):
 
         response = self.client.get('/api/song/1')
         charts = response.json['charts']
-        assert charts[0]['chartId'] == 2
-        assert charts[1]['chartId'] == 1
+        self.assertTrue(charts[0]['chartId'] == 2)
+        self.assertTrue(charts[1]['chartId'] == 1)
 
     def setUp(self):
         Base.metadata.create_all(get_db().get_bind().engine)
