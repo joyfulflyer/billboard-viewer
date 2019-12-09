@@ -1,10 +1,10 @@
-image: "docker:19.03.4"
+image: "docker:19.03.5"
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
-  - docker:19.03.4-dind
+  - docker:19.03.5-dind
 
 stages:
   - test
@@ -14,14 +14,6 @@ stages:
 before_script:
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
 
-build_image:
-  stage: build
-  script:
-    - docker build --pull -f "DockerFile" --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
-  except:
-    - external_pull_requests
-
 run_tests:
   image: "python:3.8"
   stage: test
@@ -30,6 +22,14 @@ run_tests:
     - pipenv sync --dev
   script:
     - pipenv run python -m unittest discover -p "*_test.py" -v
+
+build_image:
+  stage: build
+  script:
+    - docker build --pull -f "DockerFile" --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+  except:
+    - external_pull_requests
 
 push_latest:
   variables:
