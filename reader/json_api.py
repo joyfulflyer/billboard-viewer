@@ -46,13 +46,8 @@ General contract:
     '''
     if selected_id is None and request.is_json:
         selected_id = request.json.id
-    song = get_db().query(Song) \
-        .filter_by(id=selected_id) \
-        .one()
-    if song is None:
-        abort(404, "Song not found")
-    entries = get_db().query(Entry) \
-        .filter_by(song_id=song.id).all()
+    song = _get_song_from_id(selected_id)
+    entries = _get_entries_from_song(song)
     charts = list(map(convert_entry_to_chart, entries))
     charts.sort(key=lambda chart: (chart["chartName"], chart["date"]))
     songDict = {
@@ -88,14 +83,8 @@ def song_by_id_with_sub_chart_entries(selected_id):
         ]
     }
     '''
-
-    song = get_db().query(Song) \
-        .filter_by(id=selected_id) \
-        .one()
-    if song is None:
-        abort(404, "Song not found")
-    entries = get_db().query(Entry) \
-        .filter_by(song_id=song.id).all()
+    song = _get_song_from_id(selected_id)
+    entries = _get_entries_from_song(song)
     charts = list(map(convert_entry_to_chart, entries))
     charts.sort(key=lambda chart: (chart["chartName"], chart["date"]))
     chartsWithEntries = list(map(add_entries_to_chart, charts))
@@ -151,3 +140,18 @@ def get_songs_for_chart(selected_id):
                 "songId": entry.song_id
             }, chart_entries))
     return jsonify(converted)
+
+
+def _get_song_from_id(id):
+    song = get_db().query(Song) \
+        .filter_by(id=id) \
+        .one()
+    if song is None:
+        abort(404, "Song not found")
+    return song
+
+
+def _get_entries_from_song(song):
+    entries = get_db().query(Entry) \
+        .filter_by(song_id=song.id).all()
+    return entries
