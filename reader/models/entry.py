@@ -1,6 +1,7 @@
-from . base import Base
-from . song import Song
-from sqlalchemy import Integer, Column, String, ForeignKey
+from sqlalchemy import Column, ForeignKey, Integer, String
+
+from .base import Base
+from .song import Song
 
 
 class Entry(Base):
