@@ -1,14 +1,16 @@
 import json
-from flask import (Blueprint, request, jsonify)
-from .find_song import get_songs_with_name
-from .reader_utils import (convert_entry_to_dict, convert_to_spaces,
-                           convert_rows_to_dict)
-from .models.entry import Entry
-from .models.chart import Chart
-from .models.song import Song
-from werkzeug.exceptions import abort
-from .flask_db import get_db
 import logging
+
+from flask import Blueprint, jsonify, request
+from werkzeug.exceptions import abort
+
+from .find_song import get_songs_with_name
+from .flask_db import get_db
+from .models.chart import Chart
+from .models.entry import Entry
+from .models.song import Song
+from .reader_utils import (convert_entry_to_dict, convert_rows_to_dict,
+                           convert_to_spaces)
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.NOTSET)
@@ -93,33 +95,18 @@ def song_by_id_with_sub_chart_entries(selected_id):
     return jsonify(songDict)
 
 
-def _add_entries_to_chart(chart):
-    chart_entries = _get_chart_entries(chart['chartId'])
-    chart_entries_mapped = map(
-        lambda entry: {
-            "name": entry.name,
-            "artist": entry.artist,
-            "place": entry.place,
-            "songId": entry.song_id
-        }, chart_entries)
-    chart['entries'] = list(chart_entries_mapped)
-    return chart
-
-
 @bp.route('/chart/<int:selected_id>')
 @bp.route('/chart', methods=("POST", ))
 def get_songs_for_chart(selected_id):
     if selected_id is None and request.is_json:
         selected_id = request.json.id
     chart_entries = _get_chart_entries(selected_id)
-    converted = list(
-        map(
-            lambda entry: {
-                "name": entry.name,
-                "artist": entry.artist,
-                "place": entry.place,
-                "songId": entry.song_id
-            }, chart_entries))
+    converted = [{
+        "name": entry.name,
+        "artist": entry.artist,
+        "place": entry.place,
+        "songId": entry.song_id
+    } for entry in chart_entries]
     return jsonify(converted)
 
 
@@ -148,6 +135,18 @@ def _get_song_from_id(id):
     if song is None:
         abort(404, "Song not found")
     return song
+
+
+def _add_entries_to_chart(chart):
+    chart_entries = _get_chart_entries(chart['chartId'])
+    asDict = [{
+        "name": entry.name,
+        "artist": entry.artist,
+        "place": entry.place,
+        "songId": entry.song_id
+    } for entry in chart_entries]
+    chart['entries'] = asDict
+    return chart
 
 
 def _get_entries_from_song(song):
