@@ -3,8 +3,9 @@ import logging
 
 from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import abort
+from sqlalchemy.orm.exc import NoResultFound
 
-from .find_song import get_songs_with_name
+from .elastic_client import get_songs_with_name
 from .flask_db import get_db
 from .models.chart import Chart
 from .models.entry import Entry
@@ -21,6 +22,7 @@ bp = Blueprint('/api', __name__, url_prefix='/api')
 @bp.route('/songName', methods=("POST", ))
 def song_from_name():
     input = request.json['input']
+
     songs = get_songs_with_name(input)
     songs = songs[:15]
 
@@ -110,6 +112,20 @@ def get_songs_for_chart(selected_id):
     return jsonify(converted)
 
 
+@bp.route('/entry/<int:entry_id>')
+def get_entry_by_id(entry_id):
+    db_entry = get_db().query(Entry).filter_by(id=entry_id).first()
+    if db_entry is None:
+        abort(404, "Not found")
+    converted = {
+        "name": db_entry.name,
+        "artist": db_entry.artist,
+        "place": db_entry.place,
+        "songId": db_entry.song_id
+    }
+    return jsonify(converted)
+
+
 def _convert_entry_to_chart(entry):
     returnChart = {"place": entry.place, "chartId": entry.chart_id}
     chart = get_db().query(Chart) \
@@ -129,9 +145,12 @@ def _get_chart_entries(chart_id):
 
 
 def _get_song_from_id(id):
-    song = get_db().query(Song) \
-        .filter_by(id=id) \
-        .one()
+    try:
+        song = get_db().query(Song) \
+            .filter_by(id=id) \
+            .one()
+    except NoResultFound:
+        abort(404, "Song not found")
     if song is None:
         abort(404, "Song not found")
     return song

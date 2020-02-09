@@ -10,5 +10,10 @@ class Song(Base):
     artist = Column(String(128), nullable=False)
 
     def __repr__(self):
-        return "Song: <id=%r, name=%r, spotify_id=%r>" % \
-            (self.id, self.name, self.spotify_id)
+        return "Song: <id=%r, name=%r, artist=%r>" % \
+            (self.id, self.name, self.artist)
+
+    def __eq__(self, other):
+        if isinstance(other, Song):
+            return self.id == other.id and self.name == other.name and self.artist == other.artist
+        return False

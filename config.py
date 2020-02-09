@@ -1,4 +1,4 @@
-from os import environ, path
+from os import environ, path, getenv
 import urllib.parse
 import logging
 
@@ -35,6 +35,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = create_url_from_parts(username, password, host,
                                                     db_name)
+    SEARCH_HOST = getenv('SEARCH_HOST', "localhost")
 
 
 class TestConfig(Config):
