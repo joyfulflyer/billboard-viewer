@@ -16,6 +16,7 @@ flask = "*"
 pymysql = "*"
 cryptography = "*"
 requests = "*"
+werkzeug = "~=0.16"
 
 [requires]
 python_version = "3.8"
