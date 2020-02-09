@@ -15,6 +15,7 @@ flask-sqlalchemy = "*"
 flask = "*"
 pymysql = "*"
 cryptography = "*"
+requests = "*"
 
 [requires]
 python_version = "3.8"
