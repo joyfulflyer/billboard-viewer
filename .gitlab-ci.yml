@@ -1,10 +1,10 @@
-image: "docker:19.03.4"
+image: "docker:19.03.5"
 
 variables:
   DOCKER_TLS_CERTDIR: "/certs"
 
 services:
-  - docker:19.03.4-dind
+  - docker:19.03.5-dind
 
 stages:
   - test
@@ -13,14 +13,6 @@ stages:
 
 before_script:
   - echo -n $CI_JOB_TOKEN | docker login -u gitlab-ci-token --password-stdin $CI_REGISTRY
-
-build_image:
-  stage: build
-  script:
-    - docker build --pull -f "DockerFile" --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA .
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-  except:
-    - external_pull_requests
 
 run_tests:
   image: "python:3.8"
@@ -31,41 +23,49 @@ run_tests:
   script:
     - pipenv run python -m unittest discover -p "*_test.py" -v
 
+build_image:
+  stage: build
+  script:
+    - docker build --pull -f "DockerFile" --tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID .
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+  except:
+    - external_pull_requests
+
 push_latest:
   variables:
     GIT_STRATEGY: none
   only:
     - master
-  stage: push
-  script:
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:latest
-    - docker push $CI_REGISTRY_IMAGE:latest
   except:
     - external_pull_requests
+  stage: push
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID $CI_REGISTRY_IMAGE:latest
+    - docker push $CI_REGISTRY_IMAGE:latest
 
 push_tag:
   variables:
     GIT_STRATEGY: none
   only:
     - tags
-  stage: push
-  script:
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
-    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
   except:
     - external_pull_requests
+  stage: push
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
+    - docker push $CI_REGISTRY_IMAGE:$CI_COMMIT_TAG
 
 push_develop:
   variables:
     GIT_STRATEGY: none
   only:
     - develop
-  stage: push
-  script:
-    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA
-    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_SHA $CI_REGISTRY_IMAGE:develop
-    - docker push $CI_REGISTRY_IMAGE:develop
   except:
     - external_pull_requests
+  stage: push
+  script:
+    - docker pull $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID
+    - docker tag $CI_REGISTRY_IMAGE:$CI_COMMIT_REF_NAME-$CI_PIPELINE_IID $CI_REGISTRY_IMAGE:develop
+    - docker push $CI_REGISTRY_IMAGE:develop
