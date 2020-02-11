@@ -1,5 +1,6 @@
 import json
 import logging
+import time
 
 from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import abort
@@ -85,15 +86,29 @@ def song_by_id_with_sub_chart_entries(selected_id):
         ]
     }
     '''
+    start_time = time.time()
     song = _get_song_from_id(selected_id)
+    get_song_from_db_time = time.time()
     charts = _get_sorted_charts(song)
+    get_charts_from_db_time = time.time()
     chartsWithEntries = list(map(_add_entries_to_chart, charts))
+    entries_added_time = time.time()
     songDict = {
         "name": song.name,
         "artist": song.artist,
         "id": song.id,
         "charts": chartsWithEntries
     }
+    time_to_get_song_from_db = get_song_from_db_time - start_time
+    time_to_get_sorted_charts_after_song = get_charts_from_db_time - get_song_from_db_time
+    time_to_add_entries = entries_added_time - get_charts_from_db_time
+
+    logger.error("Get song from db: %s Sorted charts: %s Add entries: %s" % (
+        time_to_get_song_from_db,
+        time_to_get_sorted_charts_after_song,
+        time_to_add_entries,
+    ))
+
     return jsonify(songDict)
 
 

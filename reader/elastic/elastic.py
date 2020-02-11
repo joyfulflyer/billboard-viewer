@@ -18,8 +18,18 @@ def create_url():
     return f"{scheme}://{host}:{port}/"
 
 
+# data = {"query": {"match": {"name": {"query": query}}}}
+
+
 def search_for_song(query):
-    data = {"query": {"match": {"name": {"query": query}}}}
+    data = {
+        "query": {
+            "multi_match": {
+                "query": query,
+                "fields": ["name", "artist"]
+            }
+        }
+    }
     return s.post(create_url() + SEARCH_PATH, json=data).json()
 
 
