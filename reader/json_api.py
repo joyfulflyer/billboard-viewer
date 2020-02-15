@@ -27,7 +27,7 @@ def song_from_name():
     songs = get_songs_with_name(input)
     songs = songs[:15]
 
-    return json.dumps(convert_entry_to_dict(songs))
+    return jsonify(convert_entry_to_dict(songs))
 
 
 @bp.route('/song/<int:selected_id>')

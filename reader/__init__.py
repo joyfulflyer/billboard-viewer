@@ -31,8 +31,8 @@ def create_app(test_config=None):
 
     flask_db.init_app(app)
 
-    #    from . import find_song
-    #    app.register_blueprint(find_song.bp)
+    from . import find_song
+    app.register_blueprint(find_song.bp)
 
     #    from . import show_song
     #    app.register_blueprint(show_song.bp)

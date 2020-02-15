@@ -6,14 +6,25 @@ import logging
 logger = logging.getLogger(__name__)
 
 
+def ensure_host(func):
+    def wrapper_ensure_host(**kwargs):
+        if elastic.host != current_app.config['SEARCH_HOST']:
+            host = current_app.config['SEARCH_HOST']
+            logger.debug("setting elastic host to " + host)
+            elastic.host = host
+        func(**kwargs)
+
+    return wrapper_ensure_host
+
+
+@ensure_host
 def get_songs_with_name(song_name):
-    verify_search_host_with_env()
     results = elastic.results_for_song_search(song_name)
     return elastic_converter.convert_elastic_results_to_songs(results)
 
 
-def verify_search_host_with_env():
-    if elastic.host != current_app.config['SEARCH_HOST']:
-        host = current_app.config['SEARCH_HOST']
-        logger.debug("setting elastic host to " + host)
-        elastic.host = host
+@ensure_host
+def search_name_artist(name, artist):
+    results = elastic.results(
+        elastic.search_name_artist(name=name, artist=artist))
+    return elastic_converter.convert_elastic_results_to_songs(results)

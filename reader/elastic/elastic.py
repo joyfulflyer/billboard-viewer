@@ -30,10 +30,40 @@ def search_for_song(query):
             }
         }
     }
-    return s.post(create_url() + SEARCH_PATH, json=data).json()
+    return submit_search(data)
 
 
 def results_for_song_search(query):
-    response = search_for_song(query)
+    return results(search_for_song(query))
+
+
+def search_name_artist(name, artist):
+    data = {
+        "query": {
+            "bool": {
+                "must": [{
+                    "match": {
+                        "name": {
+                            "query": name
+                        }
+                    }
+                }, {
+                    "match": {
+                        "artist": {
+                            "query": artist
+                        }
+                    }
+                }]
+            }
+        }
+    }
+    return submit_search(data)
+
+
+def results(response):
     hits = response['hits']
     return hits['hits']
+
+
+def submit_search(data):
+    return s.post(create_url() + SEARCH_PATH, json=data).json()

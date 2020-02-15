@@ -3,9 +3,10 @@ import json
 import logging
 
 from flask import (Blueprint, flash, g, redirect, render_template, request,
-                   session, url_for)
+                   jsonify, session, url_for)
 from werkzeug.exceptions import abort
 
+from . import elastic_client
 from .flask_db import get_db
 from .models.entry import Entry
 from .models.song import Song
@@ -19,7 +20,10 @@ bp = Blueprint('/search', __name__, url_prefix='/search')
 
 @bp.route('/', methods=("GET", ))
 def search():
-    pass
+    name = request.args.get("name", default="")
+    artist = request.args.get("artist", default="")
+    result = elastic_client.search_name_artist(name=name, artist=artist)
+    return jsonify(result)
 
 
 @bp.route('/search_results', methods=("GET", ))
@@ -33,7 +37,7 @@ def partial_song(input):
     pass
 
 
-def get_songs_with_name(song_name):
+def get_songs_with_name_db(song_name):
     where_clause = "%" + song_name + "%"
     query = get_db().query(Song) \
                     .filter(Song.name.ilike(where_clause)) \
