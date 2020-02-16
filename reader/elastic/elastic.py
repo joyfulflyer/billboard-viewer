@@ -41,7 +41,7 @@ def search_name_artist(name, artist):
     data = {
         "query": {
             "bool": {
-                "must": [{
+                "should": [{
                     "match": {
                         "name": {
                             "query": name

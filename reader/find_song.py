@@ -2,13 +2,11 @@ import functools
 import json
 import logging
 
-from flask import (Blueprint, flash, g, redirect, render_template, request,
-                   jsonify, session, url_for)
+from flask import (Blueprint, request, jsonify, session, url_for)
 from werkzeug.exceptions import abort
 
 from . import elastic_client
 from .flask_db import get_db
-from .models.entry import Entry
 from .models.song import Song
 from .reader_utils import (convert_entry_to_dict, convert_rows_to_dict,
                            convert_to_spaces)
@@ -23,7 +21,10 @@ def search():
     name = request.args.get("name", default="")
     artist = request.args.get("artist", default="")
     result = elastic_client.search_name_artist(name=name, artist=artist)
-    return jsonify(result)
+    if len(result) == 0:
+        abort(404, "Not found")
+    converted = convert_entry_to_dict(result)
+    return jsonify(converted)
 
 
 @bp.route('/search_results', methods=("GET", ))

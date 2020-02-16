@@ -12,7 +12,7 @@ def ensure_host(func):
             host = current_app.config['SEARCH_HOST']
             logger.debug("setting elastic host to " + host)
             elastic.host = host
-        func(**kwargs)
+        return func(**kwargs)
 
     return wrapper_ensure_host
 
@@ -25,6 +25,6 @@ def get_songs_with_name(song_name):
 
 @ensure_host
 def search_name_artist(name, artist):
-    results = elastic.results(
-        elastic.search_name_artist(name=name, artist=artist))
+    search = elastic.search_name_artist(name=name, artist=artist)
+    results = elastic.results(search)
     return elastic_converter.convert_elastic_results_to_songs(results)
