@@ -2,7 +2,7 @@ import functools
 import json
 import logging
 
-from flask import (Blueprint, request, jsonify, session, url_for)
+from flask import (Blueprint, request, jsonify, session, url_for, current_app)
 from werkzeug.exceptions import abort
 
 from . import elastic_client
@@ -13,13 +13,14 @@ from .reader_utils import (convert_entry_to_dict, convert_rows_to_dict,
 
 logger = logging.getLogger(__name__)
 
-bp = Blueprint('/search', __name__, url_prefix='/search')
+bp = Blueprint('/search', __name__, url_prefix='/api/search')
 
 
-@bp.route('/', methods=("GET", ))
+@bp.route('/query', methods=("GET", ))
 def search():
-    name = request.args.get("name", default="")
-    artist = request.args.get("artist", default="")
+    name = convert_to_spaces(request.args.get("name", default=""))
+    artist = convert_to_spaces(request.args.get("artist", default=""))
+    current_app.logger.debug(f"name: {name} artist: {artist}")
     result = elastic_client.search_name_artist(name=name, artist=artist)
     if len(result) == 0:
         abort(404, "Not found")

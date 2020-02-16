@@ -7,12 +7,12 @@ logger = logging.getLogger(__name__)
 
 
 def ensure_host(func):
-    def wrapper_ensure_host(**kwargs):
+    def wrapper_ensure_host(*args, **kwargs):
         if elastic.host != current_app.config['SEARCH_HOST']:
             host = current_app.config['SEARCH_HOST']
             logger.debug("setting elastic host to " + host)
             elastic.host = host
-        return func(**kwargs)
+        return func(*args, **kwargs)
 
     return wrapper_ensure_host
 
