@@ -7,9 +7,10 @@ def convert_elastic_results_to_songs(result_array):
 
 
 def _c(result):
+    data = result['_source']
     return Song(id=int(result['_id']),
-                name=result['_source']['name'],
-                artist=result['_source']['artist'])
+                name=data['name'][0],
+                artist=data['artist'][0])
 
 
 def clean_elastic_results(results_array):

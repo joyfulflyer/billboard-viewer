@@ -1,17 +1,10 @@
-import functools
-import json
-import logging
-
-from flask import (Blueprint, request, jsonify, session, url_for, current_app)
+from flask import Blueprint, current_app, jsonify, request
 from werkzeug.exceptions import abort
 
 from . import elastic_client
 from .flask_db import get_db
 from .models.song import Song
-from .reader_utils import (convert_entry_to_dict, convert_rows_to_dict,
-                           convert_to_spaces)
-
-logger = logging.getLogger(__name__)
+from .reader_utils import convert_entry_to_dict, convert_to_spaces
 
 bp = Blueprint('/search', __name__, url_prefix='/api/search')
 

@@ -3,8 +3,8 @@ import logging
 import time
 
 from flask import Blueprint, jsonify, request
-from werkzeug.exceptions import abort
 from sqlalchemy.orm.exc import NoResultFound
+from werkzeug.exceptions import abort
 
 from .elastic_client import get_songs_with_name
 from .flask_db import get_db
