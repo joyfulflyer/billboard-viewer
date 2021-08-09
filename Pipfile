@@ -16,7 +16,8 @@ flask = "*"
 pymysql = "*"
 cryptography = "*"
 requests = "*"
-werkzeug = "~=0.16"
+werkzeug = "*"
+flask-wtf = "*"
 
 [requires]
-python_version = "3.8"
+python_version = "3.9"
