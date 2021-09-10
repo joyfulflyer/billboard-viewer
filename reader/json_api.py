@@ -5,7 +5,8 @@ from flask import Blueprint, jsonify, request
 from werkzeug.exceptions import abort
 from sqlalchemy.orm.exc import NoResultFound
 
-from .elastic_client import get_songs_with_name
+# from .elastic_client import get_songs_with_name
+from .find_song import get_songs_with_name
 from .flask_db import get_db
 from .models.chart import Chart
 from .models.entry import Entry
