@@ -53,7 +53,7 @@ def songs_from_artist(input):
                      .order_by(Song.place) \
                      .group_by(Song.name) \
                      .all()
-    if len(artist) is 0:
+    if len(artist) == 0:
         abort(400, "Not found")
 
 
