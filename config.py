@@ -13,11 +13,14 @@ def get_db_type_from_variable():
     return type
 
 
-def create_url_from_parts(username, password, host, dbname):
+def create_url_from_parts(username, password, host, dbname, db_file):
     url = ""
     base = get_db_type_from_variable()
     if "sqlite" in base:
-        db_path = path.abspath(path.join(path.dirname(__file__), 'charts.db'))
+        if db_file == None:
+            db_file = 'charts.db'
+        if not db_file.startswith('/'):
+            db_path = path.abspath(path.join(path.dirname(__file__), db_file))
         url = base + db_path
     elif "mysql" in base:
         password = urllib.parse.quote_plus(password)
@@ -31,10 +34,11 @@ class Config:
     password = environ['PASS']
     host = environ.get('DB_HOST')
     db_name = environ.get('DATABASE')
+    db_file = environ.get('DB_FILE_NAME')
     SECRET_KEY = 'u9DCvDN82*$^!xbH#UG'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SQLALCHEMY_DATABASE_URI = create_url_from_parts(username, password, host,
-                                                    db_name)
+                                                    db_name, db_file)
     SEARCH_HOST = getenv('SEARCH_HOST', "localhost")
 
 
