@@ -19,7 +19,8 @@ def create_url_from_parts(username, password, host, dbname, db_file):
     if "sqlite" in base:
         if db_file == None:
             db_file = 'charts.db'
-        db_path = path.abspath(path.join(path.dirname(__file__), db_file))
+        if not db_file.startswith('/'):
+            db_path = path.abspath(path.join(path.dirname(__file__), db_file))
         url = base + db_path
     elif "mysql" in base:
         password = urllib.parse.quote_plus(password)
