@@ -20,8 +20,8 @@ def create_url_from_parts(username, password, host, dbname, db_file):
         if db_file == None:
             db_file = 'charts.db'
         if not db_file.startswith('/'):
-            db_path = path.abspath(path.join(path.dirname(__file__), db_file))
-        url = base + db_path
+            db_file = path.abspath(path.join(path.dirname(__file__), db_file))
+        url = base + db_file
     elif "mysql" in base:
         password = urllib.parse.quote_plus(password)
         url = "%s%s:%s@%s/%s" % (base, username, password, host, dbname)
